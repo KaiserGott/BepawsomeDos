@@ -17,6 +17,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_slideshow" />
         <item
+            android:id="@+id/nav_publicacion"
+            android:icon="@drawable/baseline_publicacion_24"
+            android:title="@string/menu_publicacion" />
+        <item
             android:id="@+id/nav_configuracion"
             android:icon="@drawable/baseline_color_lens_24"
             android:title="@string/menu_configuracion" />

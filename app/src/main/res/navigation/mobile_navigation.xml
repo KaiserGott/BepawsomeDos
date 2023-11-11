@@ -24,6 +24,12 @@
         tools:layout="@layout/fragment_slideshow" />
 
     <fragment
+        android:id="@+id/nav_publicacion"
+        android:name="com.example.bepawsomedos.ui.publicacion.PublicacionFragment"
+        android:label="@string/menu_publicacion"
+        tools:layout="@layout/fragment_publicacion" />
+
+    <fragment
         android:id="@+id/nav_configuracion"
         android:name="com.example.bepawsomedos.ui.configuracion.ConfiguracionFragment"
         android:label="@string/menu_configuracion"
