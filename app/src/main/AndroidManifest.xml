@@ -15,6 +15,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.BepawsomeDos.AppBarOverlay"/>
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.BepawsomeDos.NoActionBar">
             <intent-filter>
