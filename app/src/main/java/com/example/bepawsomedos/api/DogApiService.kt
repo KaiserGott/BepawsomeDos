@@ -8,6 +8,8 @@ interface DogApiService {
     fun getBreeds(): Call<DogBreedsResponse>
     @GET("breed/{breed}/images/random/3")
     fun getDogImages(@Path("breed") breed: String?): Call<DogApiResponse>
+    @GET("breed/{breed}/images/random")
+    fun getDogImage(@Path("breed") breed: String?): Call<DogApiResponse>
 
 
 }
