@@ -2,25 +2,34 @@ package com.example.bepawsomedos
 
 import android.os.Bundle
 import android.view.Menu
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
 import com.example.bepawsomedos.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var databaseReference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_BepawsomeDos_NoActionBar)
+
+        // Mueve la llamada a setPersistenceEnabled al principio de la aplicación
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
+        // Ahora obtén la referencia de la base de datos después de habilitar la persistencia
+        databaseReference = FirebaseDatabase.getInstance().reference
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -34,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
@@ -41,7 +51,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_publicacion, R.id.nav_configuracion
             ), drawerLayout
         )
+
+        // Configuración de la barra de acciones con el controlador de navegación y la configuración de AppBar
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Configuración de NavigationView con el controlador de navegación
         navView.setupWithNavController(navController)
     }
 
