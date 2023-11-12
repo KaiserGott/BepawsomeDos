@@ -156,7 +156,7 @@ class HomeFragment : Fragment() {
 
             // Realiza la transacción del fragmento
             val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.containerFragmentDataAnimal, nuevoFragmento)
+           // fragmentTransaction.replace(R.id.fragment_home.xml, nuevoFragmento)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
