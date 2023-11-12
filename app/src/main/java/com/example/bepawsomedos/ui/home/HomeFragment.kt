@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.bepawsomedos.MainActivity
 import com.example.bepawsomedos.R
+import com.example.bepawsomedos.api.DogApiResponse
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.models.User
 import com.example.bepawsomedos.viewModels.AnimalViewModel
@@ -27,6 +28,9 @@ import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
     lateinit var nameUserCredential: String
@@ -121,17 +125,42 @@ class HomeFragment : Fragment() {
         ageTextView.text = "Edad: ${animal.edad}"
         sexTextView.text = "Sexo: ${animal.sexo}"
 
-        Glide.with(this)
-            .load(animal.imagenUrl)
-            .into(imageView)
+        // Llama al nuevo método para obtener la imagen de la raza
+        animalViewModel.getDogImage(animal.raza, object : Callback<DogApiResponse> {
+            override fun onResponse(call: Call<DogApiResponse>, response: Response<DogApiResponse>) {
+                if (response.isSuccessful) {
+                    // Carga la imagen desde la URL utilizando Glide
+                    val imageUrl = response.body()?.message
+                    if (imageUrl != null) {
+                        Glide.with(requireContext())
+                            .load(imageUrl)
+                            .into(imageView)
+                    }
+                } else {
+                    Log.e(TAG, "Error al obtener la imagen del perro: ${response.message()}")
+                }
+            }
 
+            override fun onFailure(call: Call<DogApiResponse>, t: Throwable) {
+                Log.e(TAG, "Error de red al obtener la imagen del perro", t)
+            }
+        })
         customView.setOnClickListener {
-            // Cambia la actividad de destino a MainActivity
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            intent.putExtra("animalId", animalId)
-            println("Animal ID: $animalId")
-            startActivity(intent)
+            // Crea una instancia del nuevo fragmento
+            val nuevoFragmento = DataAnimalFragment()
+
+            // Pasa datos al nuevo fragmento, si es necesario
+            val bundle = Bundle()
+            bundle.putString("animalId", animalId)
+            nuevoFragmento.arguments = bundle
+
+            // Realiza la transacción del fragmento
+            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.containerFragmentDataAnimal, nuevoFragmento)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
+
         return customView
     }
 }
