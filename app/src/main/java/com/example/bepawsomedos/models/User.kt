@@ -6,7 +6,6 @@ class User(
     val password: String = "",
     val imageUrl: String = "",
     val telefono: String = "",
-
     val favoritos: MutableList<Animal> = mutableListOf(),
     val adopciones: MutableList<Animal> = mutableListOf()
 ) {
@@ -23,6 +22,5 @@ class User(
     fun agregarAnimalAAdopciones(animal: Animal) {
         adopciones.add(animal)
     }
-
 
 }

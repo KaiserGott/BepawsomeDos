@@ -2,7 +2,6 @@ package com.example.bepawsomedos.ui.home
 
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,85 +10,91 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.bepawsomedos.MainActivity
 import com.example.bepawsomedos.R
 import com.example.bepawsomedos.api.DogApiResponse
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.models.User
 import com.example.bepawsomedos.viewModels.AnimalViewModel
 import com.example.bepawsomedos.viewModels.AnimalViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import org.json.JSONException
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class HomeFragment : Fragment() {
-    lateinit var nameUserCredential: String
-    lateinit var imageUrlUserCredential: String
 
+    private lateinit var name: String
+    private lateinit var imageUrl: String
 
     private val animalViewModel: AnimalViewModel by lazy {
         ViewModelProvider(this, AnimalViewModelFactory()).get(AnimalViewModel::class.java)
     }
 
     private lateinit var animalButtonsLayout: LinearLayout
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var firebaseAuth: FirebaseAuth
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val sharedPreferences = requireContext().getSharedPreferences("Credenciales", Context.MODE_PRIVATE)
+        databaseReference = FirebaseDatabase.getInstance().reference
 
-        val jsonObjectString = sharedPreferences.getString("UserLogueado", null)
-        var jsonObject: JSONObject? = null
-        if (jsonObjectString != null) {
-            try {
-                jsonObject = JSONObject(jsonObjectString)
-                val name = jsonObject.getString("name")
-                val imageUrl = jsonObject.getString("imageUrl")
-                // Crea el objeto User con los datos obtenidos
-                val userObject = User(name, imageUrl)
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-        var gson = Gson()
-        var userObject = gson.fromJson(jsonObject.toString(), User::class.java)
-
-        if (userObject != null) {
-            nameUserCredential = userObject.name ?: ""
-            imageUrlUserCredential = userObject.imageUrl ?: ""
-        } else {
-            // Maneja el caso en el que userObject es nulo, por ejemplo, muestra un mensaje de error.
-            Log.e(TAG, "Error: userObject is null")
-        }
+        // Inicializa FirebaseAuth
+        firebaseAuth = FirebaseAuth.getInstance()
 
         val textViewUserName = view.findViewById<TextView>(R.id.textViewNombreUsuario)
-        textViewUserName.text = nameUserCredential
-
         val imageViewUser = view.findViewById<ImageView>(R.id.imageViewUserProfile2)
-        if (imageUrlUserCredential.isNotEmpty()) {
-            Picasso.get().load(imageUrlUserCredential).into(imageViewUser)
+
+        // Obtén el usuario actual
+        val currentUser = firebaseAuth.currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            databaseReference.child("usuarios").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        name = user.name ?: ""
+                        imageUrl = user.imageUrl ?: ""
+
+                        Log.d(TAG, "Datos del usuario obtenidos correctamente.")
+                        Log.d(TAG, "Nombre de usuario: $name")
+                        Log.d(TAG, "URL de la imagen: $imageUrl")
+
+                        textViewUserName.text = name
+
+                        if (imageUrl.isNotEmpty()) {
+                            Glide.with(requireContext()).load(imageUrl).into(imageViewUser)
+                        }
+                    } else {
+                        Log.e(TAG, "Error: No se pudo obtener el objeto User.")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Error al obtener datos del usuario: ${error.message}")
+                    Toast.makeText(requireContext(), "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
 
         return view
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         animalButtonsLayout = view.findViewById(R.id.animalButtonsLayout)
 
@@ -156,7 +161,7 @@ class HomeFragment : Fragment() {
 
             // Realiza la transacción del fragmento
             val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-           // fragmentTransaction.replace(R.id.fragment_home.xml, nuevoFragmento)
+            // fragmentTransaction.replace(R.id.fragment_home.xml, nuevoFragmento)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }

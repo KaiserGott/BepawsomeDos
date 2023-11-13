@@ -6,8 +6,15 @@ import retrofit2.http.Path
 interface DogApiService {
     @GET("breeds/list/all")
     fun getBreeds(): Call<DogBreedsResponse>
+
     @GET("breed/{breed}/images/random/3")
     fun getDogImages(@Path("breed") breed: String?): Call<DogApiResponse>
+
+    @GET("breed/{breed}/images/random")
+    fun getDogImage(@Path("breed") breed: String?): Call<DogApiResponse>
+
+    @GET("breed/{breedName}/list")
+    fun searchBreeds(@Path("breedName") breedName: String): Call<DogBreedsResponse>
 
 
 }
