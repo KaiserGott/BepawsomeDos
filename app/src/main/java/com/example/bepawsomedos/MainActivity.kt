@@ -25,9 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_BepawsomeDos_NoActionBar)
 
-        // Mueve la llamada a setPersistenceEnabled al principio de la aplicación
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-
         // Ahora obtén la referencia de la base de datos después de habilitar la persistencia
         databaseReference = FirebaseDatabase.getInstance().reference
 

@@ -20,6 +20,7 @@ import com.example.bepawsomedos.api.DogBreedsResponse
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.viewModels.AnimalViewModel
 import com.example.bepawsomedos.viewModels.AnimalViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import retrofit2.Call
@@ -101,9 +102,11 @@ class PublicacionFragment : Fragment() {
             val sexo = if (radioButtonMacho.isChecked) "Macho" else "Hembra"
             val peso = editTextPeso.text.toString().toDoubleOrNull() ?: 0.0
             val edad = editTextEdad.text.toString().toIntOrNull() ?: 0
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val usuarioId = currentUser!!.uid
 
             // Crear una instancia de Animal con los datos ingresados por el usuario
-            val nuevoAnimal = Animal(nombre, ubicacion, sexo, peso, edad, raza, imagenUrl = "")
+            val nuevoAnimal = Animal(nombre, ubicacion, sexo, peso, edad, raza, imagenUrl = "", usuarioId = usuarioId)
 
             // Guardar el animal en Firebase
             val animalesRef: DatabaseReference = FirebaseDatabase.getInstance().getReference("animales")
