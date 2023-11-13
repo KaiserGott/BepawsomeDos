@@ -1,100 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-<<<<<<< HEAD
-=======
   <component name="AndroidLayouts">
     <shared>
       <config />
     </shared>
   </component>
->>>>>>> origin/agustin
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="29e130d9-cc3a-4003-bbe7-825b4ffc4ba1" name="Changes" comment="" />
-=======
-    <list default="true" id="29bea4d2-bc3f-4a7a-a623-52924b981455" name="Changes" comment="asdasdasd">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/bepawsomedos/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/bepawsomedos/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/bepawsomedos/ui/home/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/bepawsomedos/ui/home/HomeFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_data_animal.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_data_animal.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_home.xml" afterDir="false" />
-    </list>
->>>>>>> origin/agustin
+    <list default="true" id="29bea4d2-bc3f-4a7a-a623-52924b981455" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-<<<<<<< HEAD
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/mario/.android/avd/Pixel_3a_API_34_extension_level_7_x86_64.avd]" />
-=======
   <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\Loned\.android\avd\Pixel_6_Pro_API_34.avd]" />
->>>>>>> origin/agustin
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
   </component>
-<<<<<<< HEAD
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <task path="$PROJECT_DIR$/app">
-          <activation />
-        </task>
-        <projects_view>
-          <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="BepawsomeDos" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="BepawsomeDos" type="f1a62948:ProjectNode" />
-                <item name="app" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="BepawsomeDos" type="f1a62948:ProjectNode" />
-                <item name="app" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="BepawsomeDos" type="f1a62948:ProjectNode" />
-                <item name="app" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="other" type="c8890929:TasksNode$1" />
-              </path>
-            </expand>
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-=======
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="resourceFile" />
         <option value="Kotlin Class" />
         <option value="layoutResourceFile" />
+        <option value="resourceFile" />
       </list>
     </option>
->>>>>>> origin/agustin
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-<<<<<<< HEAD
-        <entry key="$PROJECT_DIR$" value="mario" />
-=======
         <entry key="$PROJECT_DIR$" value="main" />
->>>>>>> origin/agustin
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -102,47 +41,31 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-<<<<<<< HEAD
-  <component name="ProjectId" id="2Y5pqQcsXF0pzHvg1opn4O3u5di" />
-=======
   <component name="ProjectId" id="2Y2qses3LOLWaPlSSOBlcbqOn81" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
->>>>>>> origin/agustin
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;android-custom-viewC:/Users/Loned/.gradle/caches/modules-2/files-2.1/androidx.constraintlayout/constraintlayout/2.2.0-alpha07/6ba35a7d632e4707e38bf2bbb2deaf3e4375e7ee/constraintlayout-2.2.0-alpha07-sources.jar!/androidx/constraintlayout/widget/ConstraintLayout.java_SELECTED&quot;: &quot;ConstraintLayout&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/mario/AndroidStudioProjects/TP3/BepawsomeDos&quot;
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;last_directory_selection&quot;: &quot;C:/Users/Loned/BepawsomeDos/app/src/androidTest/java&quot;
   }
 }</component>
-=======
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "android-custom-viewC:/Users/Loned/.gradle/caches/modules-2/files-2.1/androidx.constraintlayout/constraintlayout/2.2.0-alpha07/6ba35a7d632e4707e38bf2bbb2deaf3e4375e7ee/constraintlayout-2.2.0-alpha07-sources.jar!/androidx/constraintlayout/widget/ConstraintLayout.java_SELECTED": "ConstraintLayout",
-    "cidr.known.project.marker": "true",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "last_directory_selection": "C:/Users/Loned/BepawsomeDos/app/src/androidTest/java"
-  }
-}]]></component>
   <component name="RecentsManager">
     <key name="CreateKotlinClassDialog.RecentsKey">
       <recent name="com.example.bepawsomedos.ui.home" />
     </key>
   </component>
->>>>>>> origin/agustin
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="BepawsomeDos.app.main" />
@@ -212,18 +135,6 @@
     </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-<<<<<<< HEAD
-  <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="29e130d9-cc3a-4003-bbe7-825b4ffc4ba1" name="Changes" comment="" />
-      <created>1699825484345</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1699825484345</updated>
-    </task>
-    <servers />
-  </component>
-=======
   <component name="StandaloneScriptsStorage">
     <option name="files">
       <set>
@@ -274,7 +185,14 @@
       <option name="project" value="LOCAL" />
       <updated>1699829194427</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Ya guarda el usuario que creo la publicacion , &#10;agregado register.&#10;login ahora toma usuario.">
+      <created>1699840227187</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1699840227187</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -284,7 +202,7 @@
     <MESSAGE value="Ya da imagenes en menu" />
     <MESSAGE value="agregado metodo para buscar" />
     <MESSAGE value="asdasdasd" />
-    <option name="LAST_COMMIT_MESSAGE" value="asdasdasd" />
+    <MESSAGE value="Ya guarda el usuario que creo la publicacion , &#10;agregado register.&#10;login ahora toma usuario." />
+    <option name="LAST_COMMIT_MESSAGE" value="Ya guarda el usuario que creo la publicacion , &#10;agregado register.&#10;login ahora toma usuario." />
   </component>
->>>>>>> origin/agustin
 </project>
