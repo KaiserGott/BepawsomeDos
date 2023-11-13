@@ -3,6 +3,8 @@ package com.example.bepawsomedos.ui.home
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.bepawsomedos.R
+import com.example.bepawsomedos.adapters.AdaptadorAnimal
 import com.example.bepawsomedos.api.DogApiResponse
+import com.example.bepawsomedos.databinding.ActivityMainBinding
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.models.User
 import com.example.bepawsomedos.viewModels.AnimalViewModel
@@ -30,8 +35,12 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import com.example.bepawsomedos.databinding.FragmentHomeBinding
 class HomeFragment : Fragment() {
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var adaptador: AdaptadorAnimal
+
+    var listaAnimales = arrayListOf<Animal>()
 
     private lateinit var name: String
     private lateinit var imageUrl: String
@@ -39,6 +48,60 @@ class HomeFragment : Fragment() {
     private val animalViewModel: AnimalViewModel by lazy {
         ViewModelProvider(this, AnimalViewModelFactory()).get(AnimalViewModel::class.java)
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        llenarLista()
+        setupRecyclerView()
+
+        binding.etBuscador.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun afterTextChanged(p0: Editable?) {
+                filtrar(p0.toString())
+            }
+        })
+    }
+
+
+    fun llenarLista() {
+        listaAnimales.add(Animal("mario", "almagro", "macho", 1.0, 1, "husky", "", "" ))
+        listaAnimales.add(Animal("boris", "almagro", "macho", 1.0, 1, "husky", "", "" ))
+        listaAnimales.add(Animal("aldo", "almagro", "macho", 1.0, 1, "husky", "", "" ))
+        listaAnimales.add(Animal("agustin", "almagro", "macho", 1.0, 1, "husky", "", "" ))
+    }
+
+    fun setupRecyclerView() {
+        binding.rvLista.layoutManager = LinearLayoutManager(context)
+        adaptador = AdaptadorAnimal(listaAnimales)
+        binding.rvLista.adapter = adaptador
+    }
+
+    fun filtrar(texto: String) {
+        var listaFiltrada = arrayListOf<Animal>()
+
+        listaAnimales.forEach {
+            if (it.nombre.toLowerCase().contains(texto.toLowerCase())) {
+                listaFiltrada.add(it)
+            }
+        }
+
+        adaptador.filtrar(listaFiltrada)
+    }
+    /*
+
 
     private lateinit var animalButtonsLayout: LinearLayout
     private lateinit var databaseReference: DatabaseReference
@@ -103,8 +166,8 @@ class HomeFragment : Fragment() {
                 for (animalSnapshot in snapshot.children) {
                     val animal = animalSnapshot.getValue(Animal::class.java)
                     if (animal != null) {
-                        val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
-                        animalButtonsLayout.addView(customView)
+                        //val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
+                        //animalButtonsLayout.addView(customView)
                     } else {
                         println("Error: Animal object is null.")
                     }
@@ -167,5 +230,5 @@ class HomeFragment : Fragment() {
         }
 
         return customView
-    }
+    }*/
 }
