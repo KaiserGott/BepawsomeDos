@@ -8,7 +8,7 @@ import com.example.bepawsomedos.R
 import com.example.bepawsomedos.models.Animal
 
 class AdaptadorAnimal(
-var listaAnimales: ArrayList<Animal>
+    var listaAnimales: ArrayList<Animal>
 ): RecyclerView.Adapter<AdaptadorAnimal.ViewHolder>() {
 
     class ViewHolder(itemView: android.view.View) : RecyclerView.ViewHolder(itemView) {
@@ -40,5 +40,5 @@ var listaAnimales: ArrayList<Animal>
     fun filtrar(listaFiltrada: ArrayList<Animal>) {
         this.listaAnimales = listaFiltrada
         notifyDataSetChanged()
-    }
+       }
 }

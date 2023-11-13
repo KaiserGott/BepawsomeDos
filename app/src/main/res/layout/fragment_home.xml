@@ -36,6 +36,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etBuscador" />
 
+    <FrameLayout
+        android:id="@+id/fragment_data_animal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
