@@ -1,8 +1,10 @@
 package com.example.bepawsomedos.ui.home
 
 import android.content.ContentValues.TAG
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.bepawsomedos.DataAnimalActivity
 import com.example.bepawsomedos.R
+import com.example.bepawsomedos.adapters.AdaptadorAnimal
 import com.example.bepawsomedos.api.DogApiResponse
+import com.example.bepawsomedos.databinding.FragmentHomeBinding
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.models.User
 import com.example.bepawsomedos.viewModels.AnimalViewModel
@@ -26,7 +32,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +40,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var name: String
     private lateinit var imageUrl: String
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var adaptador: AdaptadorAnimal
+    var listaAnimales = arrayListOf<Animal>()
 
     private val animalViewModel: AnimalViewModel by lazy {
         ViewModelProvider(this, AnimalViewModelFactory()).get(AnimalViewModel::class.java)
@@ -45,10 +53,28 @@ class HomeFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+
+        binding.etBuscador.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+
+            override fun afterTextChanged(p0: Editable?) {
+                filtrar(p0.toString())
+            }
+        })
 
         databaseReference = FirebaseDatabase.getInstance().reference
 
@@ -60,6 +86,7 @@ class HomeFragment : Fragment() {
 
         // Obtén el usuario actual
         val currentUser = firebaseAuth.currentUser
+        val userId = currentUser?.uid
 
         if (currentUser != null) {
             val userId = currentUser.uid
@@ -91,22 +118,16 @@ class HomeFragment : Fragment() {
             })
         }
 
-        return view
-    }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         animalButtonsLayout = view.findViewById(R.id.animalButtonsLayout)
 
         animalViewModel.leerAnimalesDesdeFirebase(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (animalSnapshot in snapshot.children) {
                     val animal = animalSnapshot.getValue(Animal::class.java)
-                    if (animal != null) {
+                    if (animal != null && userId != animal.usuarioId) {
+                        // Verifica que el usuario actual no sea el creador del animal
                         val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
                         animalButtonsLayout.addView(customView)
-                    } else {
-                        println("Error: Animal object is null.")
                     }
                 }
             }
@@ -151,21 +172,40 @@ class HomeFragment : Fragment() {
             }
         })
         customView.setOnClickListener {
-            // Crea una instancia del nuevo fragmento
-            val nuevoFragmento = DataAnimalFragment()
+            // Crea una instancia de la nueva actividad
+            val intent = Intent(requireContext(), DataAnimalActivity::class.java)
 
             // Pasa datos al nuevo fragmento, si es necesario
             val bundle = Bundle()
             bundle.putString("animalId", animalId)
-            nuevoFragmento.arguments = bundle
+            intent.putExtras(bundle)
 
-            // Realiza la transacción del fragmento
-            val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            // fragmentTransaction.replace(R.id.fragment_home.xml, nuevoFragmento)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commit()
+            // Inicia la nueva actividad
+            startActivity(intent)
         }
 
         return customView
+    }
+
+    fun setupRecyclerView() {
+        binding.rvLista.layoutManager = LinearLayoutManager(context)
+        adaptador = AdaptadorAnimal(listaAnimales)
+        binding.rvLista.adapter = adaptador
+    }
+
+    fun filtrar(texto: String) {
+        var listaFiltrada = arrayListOf<Animal>()
+        adaptador.filtrar(listaFiltrada)
+        // Filtra las vistas en animalButtonsLayout
+        for (i in 0 until animalButtonsLayout.childCount) {
+            val customView = animalButtonsLayout.getChildAt(i)
+            val animalNombre = customView.findViewById<TextView>(R.id.animalNameTextView).text.toString()
+            val animalRaza = customView.findViewById<TextView>(R.id.animalBreedTextView).text.toString()
+            if (animalNombre.toLowerCase().contains(texto.toLowerCase()) || animalRaza.toLowerCase().contains(texto.toLowerCase())) {
+                customView.visibility = View.VISIBLE
+            } else {
+                customView.visibility = View.GONE
+            }
+        }
     }
 }

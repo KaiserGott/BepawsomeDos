@@ -2,12 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <uses-feature
         android:name="android.hardware.telephony"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -38,6 +36,7 @@
             android:name=".RegisterActivity"
             android:exported="true"
             android:theme="@style/Theme.BepawsomeDos.NoActionBar"/>
+        <activity android:name=".DataAnimalActivity" />
     </application>
 
 </manifest>
