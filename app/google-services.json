@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "895729251392",
+    "project_id": "bepawsomedos",
+    "storage_bucket": "bepawsomedos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:895729251392:android:70c84b39919a1064911ba5",
+        "android_client_info": {
+          "package_name": "com.example.bepawsomedos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwGEDC4fBcdkvpS5561yiNhgnQd4omwl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
