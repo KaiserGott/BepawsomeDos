@@ -186,8 +186,8 @@ class DataAnimalFragment : Fragment() {
                 // Manejar el caso de error al obtener datos del dueño del animal
                 println("Error al obtener datos del dueño del animal desde Firebase: ${error.message}")
             }
-            })
-        }
+        })
+    }
 
     private fun callDogApi(breedName: String) {
         // Llamar a la API para obtener imágenes de la raza específica
@@ -234,6 +234,6 @@ class DataAnimalFragment : Fragment() {
     }
 
     companion object {
-        private const val CALL_PERMISSION_REQUEST_CODE = 101
-    }
+        private const val CALL_PERMISSION_REQUEST_CODE=101
+        }
 }
