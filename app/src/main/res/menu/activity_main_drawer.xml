@@ -14,8 +14,8 @@
             android:title="@string/menu_favorite" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:icon="@drawable/ic_menu_adopcion"
+            android:title="@string/adopcion" />
         <item
             android:id="@+id/nav_publicacion"
             android:icon="@drawable/baseline_publicacion_24"
