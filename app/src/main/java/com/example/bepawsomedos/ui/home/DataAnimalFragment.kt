@@ -26,6 +26,7 @@ import com.example.bepawsomedos.api.ImageAdapter
 import com.example.bepawsomedos.api.RetrofitClient
 import com.example.bepawsomedos.models.Animal
 import com.example.bepawsomedos.models.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -127,6 +128,19 @@ class DataAnimalFragment : Fragment() {
             // Manejar el caso en el que animalId es nulo, por ejemplo, mostrar un mensaje de error o volver atrás
         }
 
+
+        val adoptarButton = view.findViewById<Button>(R.id.adoptionButton)
+        adoptarButton.setOnClickListener {
+            // Obtener el animalId del argumento
+            val animalId = arguments?.getString("animalId")
+
+            // Verificar que animalId no sea nulo antes de adoptar
+            if (animalId != null) {
+                // Lógica para agregar el animal a la lista de adopciones del usuario
+                adoptarAnimal(animalId)
+            }
+        }
+
         val callButton = view.findViewById<Button>(R.id.callButton)
         callButton.setOnClickListener {
             // Verifica si tienes permiso para realizar llamadas
@@ -152,6 +166,7 @@ class DataAnimalFragment : Fragment() {
             }
         }
     }
+
 
     private fun fetchOwnerData(ownerId: String) {
         // Ensure view is not null
@@ -187,6 +202,46 @@ class DataAnimalFragment : Fragment() {
                 println("Error al obtener datos del dueño del animal desde Firebase: ${error.message}")
             }
         })
+    }
+
+    private fun adoptarAnimal(animalId: String) {
+        // Obtener el ID del usuario actual
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (userId != null) {
+            // Obtener la lista actual de adopciones del usuario
+            val userReference = FirebaseDatabase.getInstance().getReference("usuarios").child(userId)
+            userReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        // Agregar el nuevo ID del animal a la lista existente de adopciones
+                        user.listaadopciones.add(animalId)
+
+                        // Actualizar la lista de adopciones del usuario en la base de datos
+                        val updates = hashMapOf<String, Any>("listaadopciones" to user.listaadopciones)
+                        FirebaseDatabase.getInstance().getReference("usuarios").child(userId).updateChildren(updates)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    // Notificar al usuario que la adopción fue exitosa
+                                    Toast.makeText(requireContext(), "Adopción exitosa", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // Notificar al usuario en caso de error
+                                    Toast.makeText(requireContext(), "Error al adoptar el animal", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    } else {
+                        // Manejar el caso en el que no se pueda obtener el objeto User
+                        println("Error: No se pudo obtener el objeto User.")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Manejar el caso de error al obtener datos del usuario
+                    println("Error al obtener datos del usuario desde Firebase: ${error.message}")
+                }
+            })
+        }
     }
 
     private fun callDogApi(breedName: String) {

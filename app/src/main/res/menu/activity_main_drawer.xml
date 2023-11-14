@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_adopcion"
-            android:title="@string/adopcion" />
+            android:title="@string/menu_adopcion" />
         <item
             android:id="@+id/nav_publicacion"
             android:icon="@drawable/baseline_publicacion_24"

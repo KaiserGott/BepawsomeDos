@@ -90,6 +90,7 @@ class HomeFragment : Fragment() {
         // Obtén el usuario actual
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid
+        var user: User? = null  // Declarar la variable user fuera del bloque if
 
         if (currentUser != null) {
             val userId = currentUser.uid
@@ -109,6 +110,9 @@ class HomeFragment : Fragment() {
                         if (imageUrl.isNotEmpty()) {
                             Glide.with(requireContext()).load(imageUrl).into(imageViewUser)
                         }
+
+                        // Llama a la función para cargar los animales solo después de obtener la información del usuario
+                        loadAnimals(user, userId)
                     } else {
                         Log.e(TAG, "Error: No se pudo obtener el objeto User.")
                     }
@@ -128,14 +132,20 @@ class HomeFragment : Fragment() {
                 for (animalSnapshot in snapshot.children) {
                     val animal = animalSnapshot.getValue(Animal::class.java)
                     if (animal != null && userId != animal.usuarioId) {
-                        // Verifica que el usuario actual no sea el creador del animal
-                        val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
-                        animalButtonsLayout.addView(customView)
+                        val animalId = animalSnapshot.key!!
 
-                        // Agrega el listener al botón derecho en cada vista personalizada
-                        val buttonRight = customView.findViewById<Button>(R.id.buttonRight)
+                        // Verifica si el animalId está en la lista de adopciones
+                        val isInAdopciones = user?.listaadopciones?.contains(animalId) == true
 
-                        setupButtonRightClickListener(buttonRight, animalSnapshot.key!!)
+                        if (!isInAdopciones) {
+                            // Si el animal no está en la lista de adopciones, crea la vista
+                            val customView = createCustomAnimalView(animalId, animal)
+                            animalButtonsLayout.addView(customView)
+
+                            // Agrega el listener al botón derecho en cada vista personalizada
+                            val buttonRight = customView.findViewById<Button>(R.id.buttonRight)
+                            setupButtonRightClickListener(buttonRight, animalId)
+                        }
                     }
                 }
             }
@@ -169,6 +179,24 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun loadAnimals(user: User, userId: String) {
+        animalViewModel.leerAnimalesDesdeFirebase(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (animalSnapshot in snapshot.children) {
+                    val animal = animalSnapshot.getValue(Animal::class.java)
+                    if (animal != null && userId != animal.usuarioId) {
+                        // Resto del código...
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Error al leer datos desde Firebase: ${error.message}")
+            }
+        })
+    }
+
 
     private fun agregarAFavoritos(animalId: String) {
         val currentUser = firebaseAuth.currentUser

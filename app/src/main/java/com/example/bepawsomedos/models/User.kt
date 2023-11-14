@@ -8,7 +8,7 @@ data class User(
     var imageUrl: String = "",
     var telefono: String = "",
     var listafavoritos: MutableList<String> = mutableListOf(),  // Lista de animales favoritos
-    val listaadopciones: List<String> = listOf(),  // Lista de animales adoptados
+    val listaadopciones: MutableList<String> = mutableListOf(),  // Lista de animales adoptados
 ){
     constructor() : this("","","","","","")
 }
