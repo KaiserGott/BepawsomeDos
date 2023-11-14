@@ -134,6 +134,7 @@ class HomeFragment : Fragment() {
 
                         // Agrega el listener al botón derecho en cada vista personalizada
                         val buttonRight = customView.findViewById<Button>(R.id.buttonRight)
+
                         setupButtonRightClickListener(buttonRight, animalSnapshot.key!!)
                     }
                 }
@@ -146,19 +147,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupButtonRightClickListener(buttonRight: Button, animalId: String) {
+
         buttonRight.setOnClickListener {
             if (isButtonClicked) {
                 buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_700))
                 // Aquí es donde debes agregar el objeto a la lista de favoritos
                 // Puedes utilizar el animalId para identificar el animal y guardarlo en la lista de favoritos del usuario
-                agregarAFavoritos(animalId)
+                quitarDeFavoritos(animalId)
                 println("Hola")
                 isButtonClicked = !isButtonClicked
             } else {
                 buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
                 // Aquí es donde debes quitar el objeto de la lista de favoritos
                 // Puedes utilizar el animalId para identificar el animal y quitarlo de la lista de favoritos del usuario
-                quitarDeFavoritos(animalId)
+                agregarAFavoritos(animalId)
                 println("Chao")
 
                 // Renderizar en la otra vista (si es necesario)
@@ -169,10 +171,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun agregarAFavoritos(animalId: String) {
-        // Implementa la lógica para agregar el animal a la lista de favoritos del usuario
-        // Utiliza el animalId para identificar el animal
-        // Actualiza la lista de favoritos en la base de datos o donde sea que estés almacenando esa información
-
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid
 
@@ -181,11 +179,26 @@ class HomeFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
-                        // Agrega el animalId a la lista de favoritos del usuario
-                        user.listafavoritos.add(animalId)
+                        // Verifica si el animalId ya está en la lista de favoritos
+                        if (!user.listafavoritos.contains(animalId)) {
+                            // Agrega el animalId a la lista de favoritos del usuario
+                            user.listafavoritos.add(animalId)
 
-                        // Actualiza la información en la base de datos
-                        databaseReference.child("usuarios").child(userId).setValue(user)
+                            // Actualiza la información en la base de datos
+                            val updates = HashMap<String, Any>()
+                            updates["listafavoritos"] = user.listafavoritos
+                            databaseReference.child("usuarios").child(userId).updateChildren(updates)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d(TAG, "Animal agregado a favoritos con éxito.")
+                                    } else {
+                                        Log.e(TAG, "Error al agregar animal a favoritos: ${task.exception?.message}")
+                                        Toast.makeText(requireContext(), "Error al agregar animal a favoritos", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                        } else {
+                            Log.d(TAG, "El animal ya está en la lista de favoritos.")
+                        }
                     } else {
                         Log.e(TAG, "Error: No se pudo obtener el objeto User.")
                     }
@@ -200,10 +213,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun quitarDeFavoritos(animalId: String) {
-        // Implementa la lógica para quitar el animal de la lista de favoritos del usuario
-        // Utiliza el animalId para identificar el animal
-        // Actualiza la lista de favoritos en la base de datos o donde sea que estés almacenando esa información
-
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid
 
@@ -212,11 +221,26 @@ class HomeFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
-                        // Quita el animalId de la lista de favoritos del usuario
-                        user.listafavoritos.remove(animalId)
+                        // Verifica si el animalId está en la lista de favoritos
+                        if (user.listafavoritos.contains(animalId)) {
+                            // Quita el animalId de la lista de favoritos del usuario
+                            user.listafavoritos.remove(animalId)
 
-                        // Actualiza la información en la base de datos
-                        databaseReference.child("usuarios").child(userId).setValue(user)
+                            // Actualiza la información en la base de datos
+                            val updates = HashMap<String, Any>()
+                            updates["listafavoritos"] = user.listafavoritos
+                            databaseReference.child("usuarios").child(userId).updateChildren(updates)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Log.d(TAG, "Animal quitado de favoritos con éxito.")
+                                    } else {
+                                        Log.e(TAG, "Error al quitar animal de favoritos: ${task.exception?.message}")
+                                        Toast.makeText(requireContext(), "Error al quitar animal de favoritos", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                        } else {
+                            Log.d(TAG, "El animal no está en la lista de favoritos.")
+                        }
                     } else {
                         Log.e(TAG, "Error: No se pudo obtener el objeto User.")
                     }
@@ -229,6 +253,7 @@ class HomeFragment : Fragment() {
             })
         }
     }
+
 
     private fun createCustomAnimalView(animalId: String, animal: Animal): View {
         val customView = layoutInflater.inflate(R.layout.custom_animal_view, null)
