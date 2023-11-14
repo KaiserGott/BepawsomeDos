@@ -9,35 +9,36 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.bepawsomedos.R
 import com.example.bepawsomedos.databinding.FragmentConfiguracionBinding
+import com.example.bepawsomedos.viewModels.SharedViewModel
 
 class ConfiguracionFragment : Fragment() {
-
-    private var _binding: FragmentConfiguracionBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val configurationViewModel =
-            ViewModelProvider(this).get(ConfiguracionViewModel::class.java)
 
-        _binding = FragmentConfiguracionBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        val _binding = FragmentConfiguracionBinding.inflate(inflater, container, false)
+        val root: View = _binding.root
 
-        val textView: TextView = binding.textConfiguration
-        configurationViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        sharedViewModel = ViewModelProvider(requireActivity()).get(SharedViewModel::class.java)
+
+
+        sharedViewModel.isDarkModeEnabled.observe(viewLifecycleOwner) { isDarkModeEnabled ->
+            // Actualiza tu UI o realiza acciones en función de isDarkModeEnabled
+            // Por ejemplo, puedes aplicar un tema oscuro al fragmento.
+            if (isDarkModeEnabled) {
+                requireActivity().setTheme(R.style.Theme_BepawsomeDos_Dark)
+            } else {
+                requireActivity().setTheme(R.style.Theme_BepawsomeDos)
+            }
+            // Necesitas recrear la actividad para aplicar el nuevo tema.
+            requireActivity().recreate()
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+
+        return root
     }
 }

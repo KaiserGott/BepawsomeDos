@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
@@ -18,9 +19,12 @@
         android:theme="@style/Theme.BepawsomeDos"
         tools:targetApi="31">
         <activity
+            android:name=".SharedView"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.BepawsomeDos.AppBarOverlay"/>
+            android:theme="@style/Theme.BepawsomeDos.AppBarOverlay" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
@@ -35,7 +39,7 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="true"
-            android:theme="@style/Theme.BepawsomeDos.NoActionBar"/>
+            android:theme="@style/Theme.BepawsomeDos.NoActionBar" />
         <activity android:name=".DataAnimalActivity" />
     </application>
 

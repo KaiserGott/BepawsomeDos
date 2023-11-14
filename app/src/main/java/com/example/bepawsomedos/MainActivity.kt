@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.bepawsomedos.databinding.ActivityMainBinding
+import com.example.bepawsomedos.viewModels.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
@@ -40,6 +43,13 @@ class MainActivity : AppCompatActivity() {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
+
+        val sharedViewModel = ViewModelProvider(this).get(SharedViewModel::class.java)
+        val swDarkMode = findViewById<SwitchMaterial>(R.id.swDarkMode)
+
+        swDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            sharedViewModel.isDarkModeEnabled.value = isChecked
+        }
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
