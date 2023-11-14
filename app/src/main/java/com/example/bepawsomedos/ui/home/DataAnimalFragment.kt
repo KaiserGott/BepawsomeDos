@@ -20,9 +20,12 @@ import com.example.bepawsomedos.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.min
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
+import com.bumptech.glide.Glide
 import com.example.bepawsomedos.models.Animal
+import com.example.bepawsomedos.models.User
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -34,12 +37,9 @@ class DataAnimalFragment : Fragment() {
     private lateinit var ageTextView: TextView
     private lateinit var sexTextView: TextView
     private lateinit var razaTextView: TextView
-    private lateinit var subRazaTextView: TextView
     private lateinit var imageRecyclerView: RecyclerView
     private lateinit var imageView: ImageView
     private lateinit var imageAdapter: ImageAdapter
-    private val telefonoAnimal = "123456789"
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,14 +55,13 @@ class DataAnimalFragment : Fragment() {
         ageTextView = view.findViewById(R.id.ageTextView)
         sexTextView = view.findViewById(R.id.sexTextView)
         razaTextView = view.findViewById(R.id.razaTextView)
-        subRazaTextView = view.findViewById(R.id.subRazaTextView)
         imageRecyclerView = view.findViewById(R.id.imageRecyclerView)
 
         // Dentro de onViewCreated en DataAnimalFragment
 // Recuperar el ID del animal de los argumentos del fragmento
         val animalId = arguments?.getString("animalId")
 
-// Verificar que animalId no sea nulo antes de usarlo en Firebase Database
+        // Verificar que animalId no sea nulo antes de usarlo en Firebase Database
         if (animalId != null) {
             // Obtener y mostrar los datos del animal desde Firebase
             val databaseReference = FirebaseDatabase.getInstance().reference
@@ -75,6 +74,15 @@ class DataAnimalFragment : Fragment() {
                         ageTextView.text = "Edad: ${animal.edad}"
                         sexTextView.text = "Sexo: ${animal.sexo}"
                         razaTextView.text = "Raza: ${animal.raza}"
+
+                        // Obtener el dueño del animal desde Firebase
+                        val ownerId = animal.usuarioId
+                        if (ownerId.isNotEmpty()) {
+                            fetchOwnerData(ownerId)
+                        } else {
+                            // Manejar el caso en el que usuarioId del animal es nulo o vacío
+                            println("Error: usuarioId del animal es nulo o vacío.")
+                        }
 
                         // Llamar a la API para obtener imágenes de la raza específica
                         callDogApi(animal.raza)
@@ -102,8 +110,13 @@ class DataAnimalFragment : Fragment() {
                     Manifest.permission.CALL_PHONE
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
-                // Si tienes permiso, inicia la llamada
-                // ...
+                // Si tienes permiso, obtén el número de teléfono del dueño del animal
+                val telefonoDueño = "123456789" // Reemplaza con el número de teléfono real del dueño obtenido desde Firebase
+
+                // Inicia la llamada
+                val intent = Intent(Intent.ACTION_CALL)
+                intent.data = Uri.parse("tel:$telefonoDueño")
+                startActivity(intent)
             } else {
                 // Si no tienes permiso, solicita el permiso al usuario
                 ActivityCompat.requestPermissions(
@@ -113,23 +126,44 @@ class DataAnimalFragment : Fragment() {
                 )
             }
         }
+
     }
 
-    // En la función showDogImages, actualiza el RecyclerView con las imágenes
-    private fun showDogImages(images: String) {
-        // Convierte la cadena de imágenes en una lista
-        val imageList = images.split(",").map { it.trim() }
+    private fun fetchOwnerData(ownerId: String) {
+        // Ensure view is not null
+        val currentView = view ?: return
 
-        // Limitar la lista a solo 5 imágenes
-        val limitedImages = imageList.subList(0, min(5, imageList.size))
+        // Obtener y mostrar los datos del dueño del animal desde Firebase
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        databaseReference.child("usuarios").child(ownerId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val owner = snapshot.getValue(User::class.java)
+                if (owner != null) {
+                    // Mostrar el nombre del dueño en la interfaz de usuario
+                    val ownerName = owner.name
+                    currentView.findViewById<TextView>(R.id.ownerTextView)?.text = "Dueño: $ownerName"
 
-        // Configurar el RecyclerView y el adaptador
-        imageAdapter = ImageAdapter(limitedImages.toMutableList())
-        imageRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        imageRecyclerView.adapter = imageAdapter
+                    // Load the user's image using Glide
+                    val ownerImageView = currentView.findViewById<ImageView>(R.id.ownerImageView)
+                    val imgUrl = owner.imageUrl // replace with the actual field in your User class
+                    // Use Glide to load the image from the URL
+                    Glide.with(requireContext())
+                        .load(imgUrl)
+                        .placeholder(R.drawable.baseline_person_24) // Placeholder drawable
+                        .error(R.drawable.baseline_person_24) // Error drawable if loading fails
+                        .into(ownerImageView)
+                } else {
+                    // Manejar el caso en el que no se pueda obtener el objeto User
+                    println("Error: No se pudo obtener el objeto User para el dueño del animal.")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el caso de error al obtener datos del dueño del animal
+                println("Error al obtener datos del dueño del animal desde Firebase: ${error.message}")
+            }
+        })
     }
-
     private fun callDogApi(breedName: String) {
         // Llamar a la API para obtener imágenes de la raza específica
         val dogApiService = RetrofitClient.create()
@@ -141,7 +175,7 @@ class DataAnimalFragment : Fragment() {
                     val images: String = response.body()?.message.orEmpty()
                     println("Llamada a la API exitosa. Imágenes obtenidas: $images")
                     if (images.isNotEmpty()) {
-                        showDogImages(response.body()?.message.orEmpty())
+                        showDogImages(images)
                     } else {
                         println("La lista de imágenes está vacía.")
                     }
@@ -154,6 +188,23 @@ class DataAnimalFragment : Fragment() {
                 println("Error de red al llamar a la API: ${t.message}")
             }
         })
+    }
+
+    // En la función showDogImages, actualiza el RecyclerView con las imágenes
+    private fun showDogImages(images: String) {
+        // Limitar la lista a solo 5 imágenes
+        val limitedImages = images.split(",").map { it.trim() }.take(5)
+
+        // Verifica que las URLs de las imágenes sean válidas
+        if (limitedImages.isNotEmpty()) {
+            // Configurar el RecyclerView y el adaptador
+            imageAdapter.setImageUrls(limitedImages)
+            imageRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            imageRecyclerView.adapter = imageAdapter
+        } else {
+            println("La lista de imágenes está vacía.")
+        }
     }
 
     companion object {
