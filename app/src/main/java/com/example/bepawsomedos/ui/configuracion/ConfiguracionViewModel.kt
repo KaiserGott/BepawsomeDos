@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class ConfiguracionViewModel : ViewModel() {
     private val _text = MutableLiveData<String>().apply {
-        value = "Aca deberia ir Un Switch"
+       // value = "Aca deberia ir Un Switch"
     }
     val text: LiveData<String> = _text
 }
