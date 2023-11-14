@@ -13,13 +13,10 @@ import android.widget.RadioGroup
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.bepawsomedos.R
 import com.example.bepawsomedos.api.DogApiService
 import com.example.bepawsomedos.api.DogBreedsResponse
 import com.example.bepawsomedos.models.Animal
-import com.example.bepawsomedos.viewModels.AnimalViewModel
-import com.example.bepawsomedos.viewModels.AnimalViewModelFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

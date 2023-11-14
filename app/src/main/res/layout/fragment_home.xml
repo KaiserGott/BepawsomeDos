@@ -8,13 +8,11 @@
 
     <EditText
         android:id="@+id/etBuscador"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:hint="Buscar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,24 +20,16 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLista"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         tools:listitem="@layout/custom_animal_view"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etBuscador"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etBuscador" />
-
-    <FrameLayout
-        android:id="@+id/fragment_data_animal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -53,15 +43,15 @@
 
         <ImageView
             android:id="@+id/imageViewUserProfile2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="30dp"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp" /> <!-- Reemplaza con la ruta de tu imagen de fondo -->
 
         <TextView
             android:id="@+id/textViewNombreUsuario"
             android:textColor="@color/purple_700"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
