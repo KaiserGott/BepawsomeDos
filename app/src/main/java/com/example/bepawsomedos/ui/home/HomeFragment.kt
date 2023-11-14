@@ -9,10 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,11 +40,13 @@ import retrofit2.Response
 
 class HomeFragment : Fragment() {
 
+    private var isButtonClicked = false
     private lateinit var name: String
     private lateinit var imageUrl: String
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adaptador: AdaptadorAnimal
     var listaAnimales = arrayListOf<Animal>()
+    private lateinit var buttonRight: Button
 
     private val animalViewModel: AnimalViewModel by lazy {
         ViewModelProvider(this, AnimalViewModelFactory()).get(AnimalViewModel::class.java)
@@ -77,14 +81,11 @@ class HomeFragment : Fragment() {
         })
 
         databaseReference = FirebaseDatabase.getInstance().reference
-
-        // Inicializa FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance()
 
         val textViewUserName = view.findViewById<TextView>(R.id.textViewNombreUsuario)
         val imageViewUser = view.findViewById<ImageView>(R.id.imageViewUserProfile2)
 
-        // Obtén el usuario actual
         val currentUser = firebaseAuth.currentUser
         val userId = currentUser?.uid
 
@@ -125,7 +126,6 @@ class HomeFragment : Fragment() {
                 for (animalSnapshot in snapshot.children) {
                     val animal = animalSnapshot.getValue(Animal::class.java)
                     if (animal != null && userId != animal.usuarioId) {
-                        // Verifica que el usuario actual no sea el creador del animal
                         val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
                         animalButtonsLayout.addView(customView)
                     }
@@ -142,20 +142,19 @@ class HomeFragment : Fragment() {
         val customView = layoutInflater.inflate(R.layout.custom_animal_view, null)
         val nameTextView: TextView = customView.findViewById(R.id.animalNameTextView)
         val razaTextView: TextView = customView.findViewById(R.id.animalBreedTextView)
-        val ageTextView: TextView = customView.findViewById(R.id.animalAgeTextView)
+        val ageTextView = customView.findViewById<TextView>(R.id.animalAgeTextView)
         val sexTextView: TextView = customView.findViewById(R.id.animalSexTextView)
         val imageView = customView.findViewById<ImageView>(R.id.animalImageView)
+        val buttonRight: Button = customView.findViewById(R.id.buttonRight)
 
         nameTextView.text = "Nombre: ${animal.nombre}"
         razaTextView.text = "Raza: ${animal.raza}"
         ageTextView.text = "Edad: ${animal.edad}"
         sexTextView.text = "Sexo: ${animal.sexo}"
 
-        // Llama al nuevo método para obtener la imagen de la raza
         animalViewModel.getDogImage(animal.raza, object : Callback<DogApiResponse> {
             override fun onResponse(call: Call<DogApiResponse>, response: Response<DogApiResponse>) {
                 if (response.isSuccessful) {
-                    // Carga la imagen desde la URL utilizando Glide
                     val imageUrl = response.body()?.message
                     if (imageUrl != null) {
                         Glide.with(requireContext())
@@ -171,16 +170,30 @@ class HomeFragment : Fragment() {
                 Log.e(TAG, "Error de red al obtener la imagen del perro", t)
             }
         })
-        customView.setOnClickListener {
-            // Crea una instancia de la nueva actividad
-            val intent = Intent(requireContext(), DataAnimalActivity::class.java)
 
-            // Pasa datos al nuevo fragmento, si es necesario
+        buttonRight.setOnClickListener {
+
+            if (isButtonClicked) {
+                buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_700))
+                //aca tengo que sumarle el objeto a la lista de fav
+               println("Hola")
+                isButtonClicked = !isButtonClicked
+            } else {
+                buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
+                //aca es donde lo saco de la lista
+                println("Chao")
+
+                //renderizar en la otra vista
+
+                isButtonClicked = !isButtonClicked
+            }
+        }
+
+        customView.setOnClickListener {
+            val intent = Intent(requireContext(), DataAnimalActivity::class.java)
             val bundle = Bundle()
             bundle.putString("animalId", animalId)
             intent.putExtras(bundle)
-
-            // Inicia la nueva actividad
             startActivity(intent)
         }
 
@@ -196,7 +209,6 @@ class HomeFragment : Fragment() {
     fun filtrar(texto: String) {
         var listaFiltrada = arrayListOf<Animal>()
         adaptador.filtrar(listaFiltrada)
-        // Filtra las vistas en animalButtonsLayout
         for (i in 0 until animalButtonsLayout.childCount) {
             val customView = animalButtonsLayout.getChildAt(i)
             val animalNombre = customView.findViewById<TextView>(R.id.animalNameTextView).text.toString()

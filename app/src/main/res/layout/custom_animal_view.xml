@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -17,10 +18,12 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/dog_default"
-            card_view:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toStartOf="@+id/buttonRight"
+            card_view:layout_constraintHorizontal_bias="0.064"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintEnd_toEndOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.384" />
 
         <TextView
             android:id="@+id/animalNameTextView"
@@ -41,12 +44,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:gravity="left"
             android:hint="Telefono"
-            android:gravity="right"
             card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toEndOf="@+id/animalImageView"
             card_view:layout_constraintTop_toBottomOf="@+id/animalNameTextView" />
 
@@ -55,32 +57,41 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:gravity="right"
+            android:gravity="left"
             android:hint="Email"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.0"
             card_view:layout_constraintStart_toEndOf="@+id/animalImageView"
-            card_view:layout_constraintTop_toBottomOf="@+id/animalBreedTextView" />
+            card_view:layout_constraintTop_toBottomOf="@+id/animalBreedTextView"
+            card_view:layout_constraintVertical_bias="0.037" />
 
         <TextView
             android:id="@+id/animalSexTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:gravity="right"
+            android:gravity="left"
             android:hint="Sex"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/animalImageView"
             card_view:layout_constraintTop_toBottomOf="@+id/animalAgeTextView" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <Button
+            android:id="@+id/buttonRight"
+            android:layout_width="71dp"
+            android:layout_height="39dp"
+            android:text="Like"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="1.0"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="0.511" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
