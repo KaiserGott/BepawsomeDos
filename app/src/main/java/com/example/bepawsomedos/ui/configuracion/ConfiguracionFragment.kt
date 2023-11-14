@@ -1,6 +1,7 @@
 package com.example.bepawsomedos.ui.configuracion
 
 import android.content.ContentValues
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
@@ -14,8 +15,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import com.bumptech.glide.Glide
 import com.example.bepawsomedos.R
 import com.example.bepawsomedos.databinding.FragmentConfiguracionBinding
@@ -30,6 +33,15 @@ import com.google.gson.Gson
 import org.json.JSONObject
 
 class ConfiguracionFragment : Fragment() {
+
+    companion object {
+        fun newInstance() = ConfiguracionFragment()
+        const val PREFS_NAME = "prefs"
+        const val IS_DARK_MODE_ENABLED = "isDarkModeEnabled"
+    }
+    private var _binding: FragmentConfiguracionBinding? = null
+    private val binding get() = _binding!!
+
 
     private lateinit var editImageUrl: EditText
     private lateinit var editMail: EditText
@@ -47,20 +59,40 @@ class ConfiguracionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_configuracion, container, false)
+        // Elimina esta línea que está ubicada fuera del método
+        // val view = inflater.inflate(R.layout.fragment_configuracion, container, false)
 
-        editImageUrl = view.findViewById(R.id.editImageUrl)
-        editMail = view.findViewById(R.id.editMail)
-        editName = view.findViewById(R.id.editName)
-        editPassword = view.findViewById(R.id.editPassword)
-        editTelefono = view.findViewById(R.id.editTelefono)
-        btnGuardar = view.findViewById(R.id.btnGuardar)
+        val configurationViewModel =
+            ViewModelProvider(this).get(ConfiguracionViewModel::class.java)
+
+        _binding = FragmentConfiguracionBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        val textView: TextView = binding.textConfiguration
+        val switchModoOscuro = binding.root.findViewById<Switch>(R.id.darkMode)
+        switchModoOscuro.isChecked = isDarkModeEnabled()
+        switchModoOscuro.setOnCheckedChangeListener { _, isChecked ->
+            toggleDarkMode(isChecked)
+        }
+
+        configurationViewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
+        }
+
+        // Elimina estas líneas, ya que no necesitas inflar otra vista
+        // val view = inflater.inflate(R.layout.fragment_configuracion, container, false)
+        editImageUrl = root.findViewById(R.id.editImageUrl)
+        editMail = root.findViewById(R.id.editMail)
+        editName = root.findViewById(R.id.editName)
+        editPassword = root.findViewById(R.id.editPassword)
+        editTelefono = root.findViewById(R.id.editTelefono)
+        btnGuardar = root.findViewById(R.id.btnGuardar)
 
         btnGuardar.setOnClickListener {
             guardarPerfil()
         }
 
-        return view
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -175,6 +207,31 @@ class ConfiguracionFragment : Fragment() {
             println("Error: userJson es nulo.")
             Toast.makeText(requireContext(), "Error al guardar los datos.", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    fun toggleDarkMode(isDarkModeEnabled: Boolean) {
+        // Almacena el estado en SharedPreferences u otra lógica según tus necesidades
+        saveDarkModeState(isDarkModeEnabled)
+
+        if (isDarkModeEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        // Recrea la actividad para aplicar los cambios en el tema
+        requireActivity().recreate()
+    }
+
+    private fun saveDarkModeState(isDarkModeEnabled: Boolean) {
+        val editor = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+        editor.putBoolean(IS_DARK_MODE_ENABLED, isDarkModeEnabled)
+        editor.apply()
+    }
+
+    fun isDarkModeEnabled(): Boolean {
+        val sharedPreferences = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean(IS_DARK_MODE_ENABLED, false)
     }
 
 
