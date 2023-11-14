@@ -1,28 +1,14 @@
 package com.example.bepawsomedos.models
 
-class User(
+data class User(
+    val id: String = "",
     val name: String = "",
-    val mail: String = "",
     val password: String = "",
+    val mail: String = "",
     val imageUrl: String = "",
     val telefono: String = "",
-
-    val favoritos: MutableList<Animal> = mutableListOf(),
-    val adopciones: MutableList<Animal> = mutableListOf()
-) {
-    constructor() : this("", "", "", "", "")
-
-    fun agregarAnimalAFavoritos(animal: Animal) {
-        favoritos.add(animal)
-    }
-
-    fun eliminarAnimalDeFavoritos(animal: Animal) {
-        favoritos.remove(animal)
-    }
-
-    fun agregarAnimalAAdopciones(animal: Animal) {
-        adopciones.add(animal)
-    }
-
-
+    var listafavoritos: MutableList<String> = mutableListOf(),  // Lista de animales favoritos
+    val listaadopciones: List<String> = listOf(),  // Lista de animales adoptados
+){
+    constructor() : this("","","","","","")
 }
