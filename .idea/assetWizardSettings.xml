@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$USER_HOME$/Android/Sdk/icons/material/materialicons/star/baseline_star_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/handshake/baseline_handshake_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,8 +33,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="8e70e7" />
-                            <entry key="outputName" value="ic_star" />
+                            <entry key="outputName" value="baseline_handshake_24" />
+                            <entry key="sourceFile" value="C:\Ort\2023-2.2-Cuatri\TP3 - Taller Programacion 3\APP-Final2\BepawsomeDos" />
                           </map>
                         </option>
                       </PersistentState>
