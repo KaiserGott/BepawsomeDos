@@ -58,7 +58,8 @@ class FavoriteFragment : Fragment() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)
                     if (user != null) {
-                        obtenerDetallesAnimales(user.listafavoritos)
+                        val favoritosIds = user.listafavoritos.filterNotNull().filter { it.isNotEmpty() }
+                        obtenerDetallesAnimales(favoritosIds)
                     }
                 }
 
@@ -71,6 +72,9 @@ class FavoriteFragment : Fragment() {
     private fun obtenerDetallesAnimales(animalIds: List<String>) {
         val listaAnimales = ArrayList<Animal>()
 
+        // Usar un contador para verificar cuándo se han cargado todos los animales
+        var animalesCargados = 0
+
         for (animalId in animalIds) {
             databaseReference.child("animales").child(animalId)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -78,12 +82,23 @@ class FavoriteFragment : Fragment() {
                         val animal = snapshot.getValue(Animal::class.java)
                         if (animal != null) {
                             listaAnimales.add(animal)
+                        }
+
+                        // Incrementar el contador y verificar si todos los animales han sido cargados
+                        animalesCargados++
+                        if (animalesCargados == animalIds.size) {
                             adaptador.filtrar(listaAnimales)
                         }
                     }
 
                     override fun onCancelled(error: DatabaseError) {
                         Log.e("FavoriteFragment", "Error al obtener detalles del animal: ${error.message}")
+
+                        // Incrementar el contador en caso de error para garantizar que se llame a filtrar
+                        animalesCargados++
+                        if (animalesCargados == animalIds.size) {
+                            adaptador.filtrar(listaAnimales)
+                        }
                     }
                 })
         }
