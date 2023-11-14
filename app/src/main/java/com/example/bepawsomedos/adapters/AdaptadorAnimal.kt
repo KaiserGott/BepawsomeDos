@@ -27,10 +27,10 @@ class AdaptadorAnimal(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val animal = listaAnimales[position]
 
-        holder.tvNombre.text = animal.nombre
-        holder.tvRaza.text = animal.raza
-        holder.tvAge.text = animal.edad.toString()
-        holder.tvSex.text = animal.sexo
+        holder.tvNombre.text = "Nombre: ${animal.nombre}"
+        holder.tvRaza.text = "Raza: ${animal.raza}"
+        holder.tvAge.text = "Edad: ${animal.edad}"
+        holder.tvSex.text = "Sexo: ${animal.sexo}"
     }
 
     override fun getItemCount(): Int {
