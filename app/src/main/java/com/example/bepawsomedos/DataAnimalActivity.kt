@@ -12,9 +12,8 @@ class DataAnimalActivity : AppCompatActivity() {
         // Verifica si el fragmento ya está en el contenedor
         if (savedInstanceState == null) {
             val fragment = DataAnimalFragment()
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit()
+            fragment.arguments = intent.extras
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
         }
     }
 }
