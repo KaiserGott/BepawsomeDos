@@ -10,8 +10,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="200dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -47,17 +46,6 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/subRazaTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="SubRaza:"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/razaTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
         android:id="@+id/sexTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,7 +53,7 @@
         android:text="Sexo:"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@+id/subRazaTextView"
+        app:layout_constraintTop_toBottomOf="@+id/razaTextView"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
@@ -79,6 +67,14 @@
         app:layout_constraintTop_toBottomOf="@+id/sexTextView"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <ImageView
+        android:id="@+id/ownerImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/baseline_person_24"
+        app:layout_constraintTop_toBottomOf="@+id/ageTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <TextView
         android:id="@+id/ownerTextView"
         android:layout_width="wrap_content"
@@ -88,14 +84,6 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/ageTextView"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <ImageView
-        android:id="@+id/ownerImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/baseline_person_24"
-        app:layout_constraintTop_toBottomOf="@+id/ownerTextView"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <Button

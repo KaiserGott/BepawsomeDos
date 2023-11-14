@@ -9,10 +9,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,14 +45,15 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adaptador: AdaptadorAnimal
     var listaAnimales = arrayListOf<Animal>()
+    private var isButtonClicked = false
+    private lateinit var buttonRight: Button
+    private lateinit var animalButtonsLayout: LinearLayout
+    private lateinit var databaseReference: DatabaseReference
+    private lateinit var firebaseAuth: FirebaseAuth
 
     private val animalViewModel: AnimalViewModel by lazy {
         ViewModelProvider(this, AnimalViewModelFactory()).get(AnimalViewModel::class.java)
     }
-
-    private lateinit var animalButtonsLayout: LinearLayout
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -128,6 +131,10 @@ class HomeFragment : Fragment() {
                         // Verifica que el usuario actual no sea el creador del animal
                         val customView = createCustomAnimalView(animalSnapshot.key!!, animal)
                         animalButtonsLayout.addView(customView)
+
+                        // Agrega el listener al botón derecho en cada vista personalizada
+                        val buttonRight = customView.findViewById<Button>(R.id.buttonRight)
+                        setupButtonRightClickListener(buttonRight, animalSnapshot.key!!)
                     }
                 }
             }
@@ -138,6 +145,91 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private fun setupButtonRightClickListener(buttonRight: Button, animalId: String) {
+        buttonRight.setOnClickListener {
+            if (isButtonClicked) {
+                buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_700))
+                // Aquí es donde debes agregar el objeto a la lista de favoritos
+                // Puedes utilizar el animalId para identificar el animal y guardarlo en la lista de favoritos del usuario
+                agregarAFavoritos(animalId)
+                println("Hola")
+                isButtonClicked = !isButtonClicked
+            } else {
+                buttonRight.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.teal_700))
+                // Aquí es donde debes quitar el objeto de la lista de favoritos
+                // Puedes utilizar el animalId para identificar el animal y quitarlo de la lista de favoritos del usuario
+                quitarDeFavoritos(animalId)
+                println("Chao")
+
+                // Renderizar en la otra vista (si es necesario)
+
+                isButtonClicked = !isButtonClicked
+            }
+        }
+    }
+
+    private fun agregarAFavoritos(animalId: String) {
+        // Implementa la lógica para agregar el animal a la lista de favoritos del usuario
+        // Utiliza el animalId para identificar el animal
+        // Actualiza la lista de favoritos en la base de datos o donde sea que estés almacenando esa información
+
+        val currentUser = firebaseAuth.currentUser
+        val userId = currentUser?.uid
+
+        if (userId != null) {
+            databaseReference.child("usuarios").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        // Agrega el animalId a la lista de favoritos del usuario
+                        user.listafavoritos.add(animalId)
+
+                        // Actualiza la información en la base de datos
+                        databaseReference.child("usuarios").child(userId).setValue(user)
+                    } else {
+                        Log.e(TAG, "Error: No se pudo obtener el objeto User.")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Error al obtener datos del usuario: ${error.message}")
+                    Toast.makeText(requireContext(), "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
+    private fun quitarDeFavoritos(animalId: String) {
+        // Implementa la lógica para quitar el animal de la lista de favoritos del usuario
+        // Utiliza el animalId para identificar el animal
+        // Actualiza la lista de favoritos en la base de datos o donde sea que estés almacenando esa información
+
+        val currentUser = firebaseAuth.currentUser
+        val userId = currentUser?.uid
+
+        if (userId != null) {
+            databaseReference.child("usuarios").child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    if (user != null) {
+                        // Quita el animalId de la lista de favoritos del usuario
+                        user.listafavoritos.remove(animalId)
+
+                        // Actualiza la información en la base de datos
+                        databaseReference.child("usuarios").child(userId).setValue(user)
+                    } else {
+                        Log.e(TAG, "Error: No se pudo obtener el objeto User.")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Error al obtener datos del usuario: ${error.message}")
+                    Toast.makeText(requireContext(), "Error al obtener datos del usuario", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+    }
+
     private fun createCustomAnimalView(animalId: String, animal: Animal): View {
         val customView = layoutInflater.inflate(R.layout.custom_animal_view, null)
         val nameTextView: TextView = customView.findViewById(R.id.animalNameTextView)
@@ -145,6 +237,7 @@ class HomeFragment : Fragment() {
         val ageTextView: TextView = customView.findViewById(R.id.animalAgeTextView)
         val sexTextView: TextView = customView.findViewById(R.id.animalSexTextView)
         val imageView = customView.findViewById<ImageView>(R.id.animalImageView)
+        val buttonRight = customView.findViewById<Button>(R.id.buttonRight)
 
         nameTextView.text = "Nombre: ${animal.nombre}"
         razaTextView.text = "Raza: ${animal.raza}"
@@ -171,6 +264,10 @@ class HomeFragment : Fragment() {
                 Log.e(TAG, "Error de red al obtener la imagen del perro", t)
             }
         })
+
+        // Agrega el listener al botón derecho
+        setupButtonRightClickListener(buttonRight, animalId)
+
         customView.setOnClickListener {
             // Crea una instancia de la nueva actividad
             val intent = Intent(requireContext(), DataAnimalActivity::class.java)
@@ -178,6 +275,7 @@ class HomeFragment : Fragment() {
             // Pasa datos al nuevo fragmento, si es necesario
             val bundle = Bundle()
             bundle.putString("animalId", animalId)
+            println("Animal ID en DataAnimalFragment: $animalId")
             intent.putExtras(bundle)
 
             // Inicia la nueva actividad

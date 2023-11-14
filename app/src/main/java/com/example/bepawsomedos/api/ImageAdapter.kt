@@ -26,12 +26,6 @@ class ImageAdapter(private val imageUrls: MutableList<String>) : RecyclerView.Ad
         return imageUrls.size
     }
 
-    fun setImageUrls(images: List<String>) {
-        imageUrls.clear()
-        imageUrls.addAll(images)
-        notifyDataSetChanged()
-    }
-
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
     }
