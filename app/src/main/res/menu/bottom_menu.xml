@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android = "http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:title="Home"
+        android:icon="@drawable/ic_menu_camera"/>
+
+    <item
+        android:id="@+id/bottom_favoritos"
+        android:title="Favoritos"
+        android:icon="@drawable/baseline_favorite_border_24"/>
+
+    <item
+        android:id="@+id/bottom_adopcion"
+        android:title="Adopcion"
+        android:icon="@drawable/baseline_handshake_24"/>
+
+    <item
+        android:id="@+id/bottom_publicacion"
+        android:title="Publicación"
+        android:icon="@drawable/baseline_publicacion_24"/>
+
+</menu>
+
