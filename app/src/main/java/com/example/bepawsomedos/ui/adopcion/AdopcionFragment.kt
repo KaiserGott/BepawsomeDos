@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.bepawsomedos.R
 import com.example.bepawsomedos.adapters.AdaptadorAnimal
 import com.example.bepawsomedos.models.Animal
@@ -19,6 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 
 class AdopcionFragment : Fragment() {
 
@@ -72,6 +76,17 @@ class AdopcionFragment : Fragment() {
             })
     }
 
+    private fun actualizarImagenAnimal(urlImagen: String) {
+        // Obtener la referencia al ImageView
+        val imageView = view?.findViewById<ImageView>(R.id.imagenUrl)
+
+        // Cargar la imagen utilizando Glide
+        Glide.with(this)
+            .load(urlImagen)
+            .apply(RequestOptions().centerCrop())
+            .into(imageView!!)
+    }
+
     private fun obtenerDetallesAnimales(animalIds: List<String>) {
         val listaAnimales = ArrayList<Animal>()
 
@@ -85,7 +100,11 @@ class AdopcionFragment : Fragment() {
                         val animal = snapshot.getValue(Animal::class.java)
                         if (animal != null) {
                             listaAnimales.add(animal)
+
+                            // Actualizar la imagen del animal en el ImageView
+                            actualizarImagenAnimal(animal.imagenUrl) // Asegúrate de tener la propiedad imageUrl en tu modelo Animal
                         }
+
 
                         // Incrementar el contador y verificar si todos los animales han sido cargados
                         animalesCargados++
